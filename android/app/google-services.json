@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "421447864462",
+    "project_id": "chat-app-withnotif",
+    "storage_bucket": "chat-app-withnotif.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:421447864462:android:2a6d4c47cf3519ad39b9df",
+        "android_client_info": {
+          "package_name": "com.example.chat_with_notif"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRIEZ9kxf1VbpEnIA8WbCubNwlo2FMoW8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
