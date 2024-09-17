@@ -62,7 +62,7 @@ class _AuthScreenState extends State<AuthScreen> {
             .set({
           'username': _enteredUsername,
           'email': _enteredPassword,
-          'imageUrl': imageUrl
+          'userImage': imageUrl
         });
         print(imageUrl);
       }
