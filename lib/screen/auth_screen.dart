@@ -23,14 +23,22 @@ class _AuthScreenState extends State<AuthScreen> {
 
   bool _isLogin = false;
   void _submit() async {
-    if (_formKey.currentState!.validate() ||
-        _isLogin && _selectedImage != null) {
+    // Cek jika _selectedImage null
+    if (!_isLogin && _selectedImage == null) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Please select an image.')));
+      return;
+    }
+
+    if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
     }
+
     try {
       setState(() {
         _isAuthenticating = true;
       });
+
       if (_isLogin) {
         final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
             email: _enteredEmail, password: _enteredPassword);
@@ -44,24 +52,24 @@ class _AuthScreenState extends State<AuthScreen> {
             .child('${userCredential.user!.uid}.jpg');
 
         await storageRef.putFile(_selectedImage!);
-        final imageUrl = storageRef.getDownloadURL();
+        final imageUrl = await storageRef.getDownloadURL();
         print(imageUrl);
       }
-
-      setState(() {
-        _isAuthenticating = false;
-      });
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.message ?? "Authentication failed")));
+
+      setState(() {
+        _isAuthenticating = false;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white54,
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           children: [
