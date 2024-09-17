@@ -20,11 +20,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Chat App ',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData().copyWith(
         colorScheme: ColorScheme.fromSeed(
           seedColor:
-              const Color.fromARGB(255, 255, 193, 7), // Warna kuning terang
-          brightness: Brightness.light, // Menetapkan tema cerah
+              const Color.fromARGB(255, 255, 193, 7), 
+          brightness: Brightness.light, 
         ),
       ),
       home: StreamBuilder(
