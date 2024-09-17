@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:chat_with_notif/widget/user_image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
   String _enteredEmail = "";
   String _enteredPassword = "";
+  String _enteredUsername = "";
   File? _selectedImage;
   bool _isAuthenticating = false;
 
@@ -40,7 +42,7 @@ class _AuthScreenState extends State<AuthScreen> {
       });
 
       if (_isLogin) {
-        final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
+        await _firebaseAuth.signInWithEmailAndPassword(
             email: _enteredEmail, password: _enteredPassword);
       } else {
         final userCredential =
@@ -53,6 +55,15 @@ class _AuthScreenState extends State<AuthScreen> {
 
         await storageRef.putFile(_selectedImage!);
         final imageUrl = await storageRef.getDownloadURL();
+
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(userCredential.user!.uid)
+            .set({
+          'username': _enteredUsername,
+          'email': _enteredPassword,
+          'imageUrl': imageUrl
+        });
         print(imageUrl);
       }
     } on FirebaseAuthException catch (e) {
@@ -94,6 +105,27 @@ class _AuthScreenState extends State<AuthScreen> {
                                 _selectedImage = pickedImage;
                               },
                             ),
+                          if (!_isLogin)
+                            TextFormField(
+                              decoration: const InputDecoration(
+                                labelText: 'Email Address',
+                                border: OutlineInputBorder(),
+                              ),
+                              enableSuggestions: false,
+                              textCapitalization: TextCapitalization.none,
+                              validator: (value) {
+                                if (value == null || value.trim().length < 6) {
+                                  return 'Please enter a valid username';
+                                }
+                                return null;
+                              },
+                              onSaved: (newValue) {
+                                _enteredUsername = newValue!;
+                              },
+                            ),
+                          const SizedBox(
+                            height: 20,
+                          ),
                           TextFormField(
                             decoration: const InputDecoration(
                               labelText: 'Email Address',
